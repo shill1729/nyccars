@@ -26,6 +26,13 @@ highVolumeTimeSeries <- function(from = 3, to = 6)
   {
     warning("Not all data-sets have same # of column-variables")
   }
-  dat <- do.call(rbind, dataList)
-  return(dat)
+  dat <- do.call(dplyr::bind_rows, dataList)
+  # # Extract date and time-stamp into separate columns
+  output <- data.frame(date = lubridate::as_date(dat$pickup_datetime),
+                       weekydays = lubridate::wday(dat$pickup_datetime),
+                       hour = lubridate::hour(dat$pickup_datetime),
+                       puZone = dat$PULocationID
+                       )
+  return(output)
+
 }
