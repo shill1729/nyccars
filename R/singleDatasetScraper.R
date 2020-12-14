@@ -7,6 +7,7 @@
 #' @description {This function scrapes a single data-set .csv from nyc.gov for TLC trip-record data.
 #' The data-set is chosen by category, month and year. The file is relatively large and this scraper takes at least a minute.}
 #' @return data.frame
+#' @export scrapeTripData
 scrapeTripData <- function(category, month, year = "2020")
 {
   if(!category %in% c("yellow", "green", "hire", "highvol"))

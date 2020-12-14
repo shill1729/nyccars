@@ -15,7 +15,7 @@ highVolumeTimeSeries <- function(from = 3, to = 6)
   {
     mth <- paste("0", i, sep = "")
     print(paste("Scraping", mth))
-    dataList[[i-2]] <- scrapeTripData(category = "highvol", month = mth, year = "2020")
+    dataList[[i-2]] <- highVolumeTimeSeries1(i)
   }
   dims <- lapply(dataList, dim)
   dims <- do.call(rbind, dims)
@@ -26,13 +26,12 @@ highVolumeTimeSeries <- function(from = 3, to = 6)
   {
     warning("Not all data-sets have same # of column-variables")
   }
+  # Stack them
+  print("Stacking time-series")
   dat <- do.call(dplyr::bind_rows, dataList)
-  # # Extract date and time-stamp into separate columns
-  output <- data.frame(date = lubridate::as_date(dat$pickup_datetime),
-                       weekydays = lubridate::wday(dat$pickup_datetime),
-                       hour = lubridate::hour(dat$pickup_datetime),
-                       puZone = dat$PULocationID
-                       )
-  return(output)
-
+  print("Adding months")
+  dat$month <- lubridate::month(dat$dates)
+  print("Adding ones")
+  dat$trips <- rep(1, nrow(dat))
+  return(dat)
 }
